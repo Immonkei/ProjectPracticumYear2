@@ -71,8 +71,6 @@ const HomeImproved = () => {
     { number: "95%", label: "Success Rate", icon: <StarIcon className="w-6 h-6" /> },
     { number: "500+", label: "Companies", icon: <UserGroupIcon className="w-6 h-6" /> },
     { number: "50K+", label: "Active Users", icon: <BoltIcon className="w-6 h-6" /> }
-    
-   
   ];
 
   return (
@@ -130,7 +128,7 @@ const HomeImproved = () => {
                 </motion.div>
               </div>
 
-              <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 leading-tight">
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"> {/* Changed font size here */}
                 Discover Your{" "}
                 <span className="relative">
                   <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent">
@@ -155,23 +153,12 @@ const HomeImproved = () => {
             </motion.div>
 
             <motion.div 
-              className="flex flex-col sm:flex-row justify-center gap-6 mb-16"
+              className="flex justify-center mb-16" 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.8 }}
             >
-              <NavLink to="/jobs">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(0,0,0,0.3)" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-10 py-5 rounded-2xl text-xl font-semibold shadow-2xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center gap-3"
-                >
-                  <MagnifyingGlassIcon className="w-6 h-6" />
-                  Explore Jobs Now
-                </motion.button>
-               </NavLink> 
-              
-              <NavLink to="/Services"> 
+              <NavLink to="/Services" className="mx-auto"> 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { Gift, User, Menu, X } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Function to check login status by looking for authToken
+  const checkLoginStatus = () => {
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists, false otherwise
+  };
+
+  // Check login status on component mount and when storage changes
+  useEffect(() => {
+    checkLoginStatus(); // Initial check when component mounts
+
+    // Listen for 'storage' events to react to login/logout from other tabs/windows
+    // The AuthCallback.jsx and Login.jsx also set/clear this token.
+    const handleStorageChange = () => {
+      checkLoginStatus();
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // Empty dependency array means this effect runs once after the initial render
 
   // Close mobile menu on Escape or outside click
   useEffect(() => {
@@ -32,13 +56,13 @@ const NavBar = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const handleLoginToggle = () => setIsLoggedIn(!isLoggedIn);
+
 
   const navLinks = [
     { name: 'Home', key: 'home' },
+    { name: 'FindJob', key: 'services' },
     { name: 'About Us', key: 'about' },
-    { name: 'Jobs', key: 'jobs' },
-    { name: 'Services', key: 'services' },
+   
   ];
 
   const linkClass =
@@ -92,24 +116,19 @@ const NavBar = () => {
                 </NavLink>
               </>
             ) : (
-              <NavLink
-                to="/profile"
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-200 h-10 hover:shadow-sm"
-              >
-                <div className="p-1 bg-blue-100 rounded-full">
-                  <User className="w-4 h-4 text-blue-600" />
-                </div>
-                <span>My Account</span>
-              </NavLink>
+              <>
+                <NavLink
+                  to="/profile"
+                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-200 h-10 hover:shadow-sm"
+                >
+                  <div className="p-1 bg-blue-100 rounded-full">
+                    <User className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span>My Account</span>
+                </NavLink>
+                
+              </>
             )}
-
-            <button
-              onClick={handleLoginToggle}
-              className="ml-2 px-3 py-1 text-xs border border-gray-300 rounded-md h-8 flex items-center hover:bg-gray-50 transition-all duration-200 text-gray-600"
-              title="Demo: Toggle login state"
-            >
-              {isLoggedIn ? 'Logout Demo' : 'Login Demo'}
-            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -178,27 +197,20 @@ const NavBar = () => {
                 </NavLink>
               </>
             ) : (
-              <NavLink
-                to="/profile"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-200"
-              >
-                <div className="p-2 bg-blue-100 rounded-full">
-                  <User className="w-5 h-5 text-blue-600" />
-                </div>
-                <span className="font-medium">My Account</span>
-              </NavLink>
+              <>
+                <NavLink
+                  to="/profile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                >
+                  <div className="p-2 bg-blue-100 rounded-full">
+                    <User className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <span className="font-medium">My Account</span>
+                </NavLink>
+                
+              </>
             )}
-
-            <button
-              onClick={() => {
-                handleLoginToggle();
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-600"
-            >
-              {isLoggedIn ? 'Demo: Logout' : 'Demo: Login'}
-            </button>
           </div>
         </div>
       </div>
