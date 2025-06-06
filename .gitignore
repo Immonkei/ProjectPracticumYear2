@@ -1,0 +1,17 @@
+# Python virtual environment
+Backend/venv/
+*.pyc
+__pycache__/
+
+# Node.js modules for Frontend
+Frontend/node_modules/
+Frontend/build/    # Common build output for Frontend
+Frontend/dist/     # Another common build output name for Frontend
+
+# General ignores (important for all projects)
+.env                 # Environment variable files
+*.log
+logs/                # Directory for logs
+.vscode/             # VS Code specific settings (if you don't want to share all of them)
+.DS_Store            # macOS specific desktop service store
+Thumbs.db            # Windows thumbnail cache
