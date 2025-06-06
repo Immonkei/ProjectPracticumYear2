@@ -17,16 +17,16 @@ import {
 
 const About = () => {
   const mentor = {
-    name: "Dr. Sarah Johnson",
+    name: "Dr.Toem Theara ",
     role: "Senior Tech Mentor & Advisor",
-    photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face",
+    photo: "/Assets/photo_2025-06-06_21-39-16.jpg",
     // skills: ["Leadership", "Strategy", "Mentorship", "AI Ethics"], // Skills removed
     gradient: "from-blue-600 to-blue-500",
-    bio: "With 15+ years in tech leadership, Dr. Johnson guides our team toward innovative solutions and ethical AI practices.",
+    bio: "With 15+ years in tech leadership, Dr. Toem Theara guides our team toward innovative solutions and ethical AI practices.",
     social: {
-      facebook: "https://facebook.com/drjohnson",
-      telegram: "https://t.me/drjohnson",
-      github: "https://github.com/drjohnson"
+      facebook: "https://www.facebook.com/share/1CTESrPYo6/?mibextid=wwXIfr",
+      telegram: "https://t.me/drtoemtheara",
+      github: "https://github.com/drtoemtheara"
     }
   };
 
@@ -39,7 +39,7 @@ const About = () => {
       gradient: "from-blue-600 to-blue-500",
       bio: "Full-stack developer passionate about creating seamless user experiences.",
       social: {
-        facebook: "https://facebook.com/minphanith",
+        facebook: "https://www.facebook.com/minn.phanithh?mibextid=wwXIfr&mibextid=wwXIfr",
         telegram: "https://t.me/minphanith",
         github: "https://github.com/minphanith"
       }
