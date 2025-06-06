@@ -21,12 +21,12 @@ export default function Login() {
 
     try {
       const params = new URLSearchParams();
-      // OAuth2PasswordRequestForm expects 'username' as key
+      // OAuth2PasswordRequestForm expects 'username' as key, which can be email as per your backend's get_user function
       params.append("username", email);
       params.append("password", password);
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/auth/token",
+        "http://127.0.0.1:8000/auth/token", // This matches your backend route
         params,
         {
           headers: {
@@ -35,7 +35,7 @@ export default function Login() {
         }
       );
 
-      const { access_token: token } = response.data;
+      const { access_token: token } = response.data; // Response contains access_token and token_type
 
       if (remember) {
         localStorage.setItem("authToken", token);
@@ -43,12 +43,24 @@ export default function Login() {
         sessionStorage.setItem("authToken", token);
       }
 
-      navigate("/")
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.detail || "An error occurred during login.");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handler for Google OAuth login
+  const handleGoogleLogin = () => {
+    // Redirect to your FastAPI backend's Google login endpoint
+    window.location.href = "http://127.0.0.1:8000/auth/google/login"; // This matches your backend route
+  };
+
+  // Handler for GitHub OAuth login
+  const handleGitHubLogin = () => {
+    // Redirect to your FastAPI backend's GitHub login endpoint
+    window.location.href = "http://127.0.0.1:8000/auth/github/login"; // This matches your backend route
   };
 
   return (
@@ -122,7 +134,11 @@ export default function Login() {
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-3">
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleLogin} // ADDED: onClick handler
+            >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -147,6 +163,7 @@ export default function Login() {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
+              onClick={handleGitHubLogin} // ADDED: onClick handler
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.236 1.84 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.775.418-1.305.762-1.605-2.665-.3-5.467-1.335-5.467-5.93 0-1.31.468-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.435.375.825 1.096.825 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />

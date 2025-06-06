@@ -8,6 +8,7 @@ import Services from "./Page/Services.jsx"
 import Login from "./Auth/Login.jsx"
 import Resgister from "./Auth/Resgister.jsx"
 import Profile from "./Auth/Profile.jsx"
+import AuthCallback from "./Auth/AuthCallback.jsx"
 
 createRoot(document.getElementById("root")).render(
   
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Resgister />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
 
       </Routes>

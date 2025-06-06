@@ -26,16 +26,23 @@ export default function Register() {
     }
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/auth/signup", {
+      const response = await axios.post("http://127.0.0.1:8000/auth/signup", { // This matches your backend route
         username,
         email,
         password,
       });
 
-      // If your backend returns a token
-      const { token } = response.data;
-      localStorage.setItem("authToken", token);
-      navigate("/");
+      // Based on your backend's /signup route, it returns UserResponse, not a token directly.
+      // If you intend for signup to log in the user immediately, you'd need to either:
+      // 1. Have the signup endpoint also return an access_token.
+      // 2. Call the /token endpoint after successful signup with the new user's credentials.
+      // For now, assuming you might want to redirect to login or show a success message.
+      // Let's assume for now that successful signup means they need to log in.
+      // If you want to automatically log them in, you'd need to modify the backend /signup to return a token or call /token here.
+
+      // For demonstration, let's navigate to login after successful signup.
+      alert("Registration successful! Please log in."); // Or use a more sophisticated notification
+      navigate("/login"); // Redirect to login page after successful registration
     } catch (err) {
       setError(
         err.response?.data?.detail || "An error occurred during signup."
@@ -43,6 +50,18 @@ export default function Register() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handler for Google OAuth login
+  const handleGoogleLogin = () => {
+    // Redirect to your FastAPI backend's Google login endpoint
+    window.location.href = "http://127.0.0.1:8000/auth/google/login"; // This matches your backend route
+  };
+
+  // Handler for GitHub OAuth login
+  const handleGitHubLogin = () => {
+    // Redirect to your FastAPI backend's GitHub login endpoint
+    window.location.href = "http://127.0.0.1:8000/auth/github/login"; // This matches your backend route
   };
 
   return (
@@ -130,6 +149,7 @@ export default function Register() {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
+              onClick={handleGoogleLogin} // ADDED: onClick handler
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -155,6 +175,7 @@ export default function Register() {
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
+              onClick={handleGitHubLogin} // ADDED: onClick handler
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
