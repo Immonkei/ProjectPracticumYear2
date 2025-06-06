@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+@theme {
+  --font-kh: "Roboto", sans-serif;
+  --color-primary: #2563EB;
+  --color-hover-primary: #1D4ED8.;
+  --color-bg-1: #fafaf9;
+  --color-bg-2: #f2f0f0;
+}
+
