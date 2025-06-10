@@ -1,3 +1,5 @@
+# Backend/main.py
+
 import os
 from dotenv import load_dotenv
 
@@ -20,7 +22,14 @@ from users.routes import router as users_router
 from auth.oauth_routes import router as oauth_router
 from auth.oauth_client import oauth # Corrected import - assuming this is correct
 
-app = FastAPI()
+# --- NEW IMPORT: Import your recommendation router ---
+from recommendation.routes import router as recommendation_router
+
+app = FastAPI(
+    title="Job Recommendation System API", # Added title for clarity
+    description="API for CV parsing, ML-powered job matching, and user management.", # Added description
+    version="0.1.0", # Added version
+)
 
 # Add SessionMiddleware before CORSMiddleware if you want sessions to be available to CORS
 app.add_middleware(
@@ -46,10 +55,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- Include your existing and new routers ---
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(oauth_router, prefix="/auth", tags=["oauth"]) # OAuth routes are grouped under /auth
 
+# --- NEW: Include the recommendation router ---
+app.include_router(recommendation_router, prefix="/recommendations", tags=["Recommendations"])
+
+
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to FastAPI authentication and authorization example"}
+    return {"message": "Welcome to the Job Recommendation System API!"} # Updated message for clarity5

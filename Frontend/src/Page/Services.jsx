@@ -12,13 +12,16 @@ import {
 } from "@heroicons/react/24/solid";
 
 export default function Services() {
+  const [selectedFile, setSelectedFile] = useState(null); // NEW: State to hold the actual file object
   const [fileName, setFileName] = useState("No file chosen");
   const [showJobs, setShowJobs] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [jobMatches, setJobMatches] = useState([]); // CHANGED: Now an empty array to be populated by backend data
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    setSelectedFile(file); // Store the file object here
     setFileName(file ? file.name : "No file chosen");
   };
 
@@ -37,64 +40,55 @@ export default function Services() {
     setIsDragOver(false);
     const file = e.dataTransfer.files[0];
     if (file) {
+      setSelectedFile(file); // Store the file object here
       setFileName(file.name);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => { // CHANGED: Made the function async
     e.preventDefault();
+
+    if (!selectedFile) { // Check if a file is actually selected
+      alert("Please select a CV file first.");
+      return;
+    }
+
     setIsUploading(true);
-    
-    // Simulate upload process
-    setTimeout(() => {
-      setIsUploading(false);
+    setShowJobs(false); // Hide previous jobs while uploading
+
+    const formData = new FormData();
+    formData.append("cv_file", selectedFile); // 'cv_file' must match the parameter name in your FastAPI endpoint (@router.post("/recommendations/", cv_file: UploadFile = File(...)))
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/recommendations/recommendations/", { // CHANGED: Your backend API endpoint
+        method: "POST",
+        body: formData, // Send the FormData object
+        // IMPORTANT: Do NOT manually set 'Content-Type': 'multipart/form-data'.
+        // The browser sets it correctly when you use FormData.
+      });
+
+      if (!response.ok) {
+        // Handle HTTP errors (e.g., 400 Bad Request, 500 Internal Server Error)
+        const errorData = await response.json();
+        const errorMessage = errorData.detail || "Failed to get job recommendations.";
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log("Received job recommendations:", data); // Log the response for debugging
+
+      setJobMatches(data); // CHANGED: Set the state with the received job data
       setShowJobs(true);
-    }, 2000);
+
+    } catch (error) {
+      console.error("Error uploading CV:", error);
+      alert(`Error: ${error.message || "Could not connect to the backend or process your CV. Please try again."}`);
+    } finally {
+      setIsUploading(false); // Stop uploading animation
+    }
   };
 
-  const jobMatches = [
-    {
-      title: "Senior Frontend Developer",
-      company: "TechCorp",
-      location: "Remote",
-      type: "Full-time",
-      salary: "$80k - $120k",
-      skills: ["React", "TypeScript", "Tailwind CSS"],
-      match: "95%",
-      posted: "2 days ago"
-    },
-    {
-      title: "Data Analyst",
-      company: "InsightX",
-      location: "Phnom Penh",
-      type: "Full-time", 
-      salary: "$50k - $70k",
-      skills: ["Python", "SQL", "Machine Learning"],
-      match: "88%",
-      posted: "1 week ago"
-    },
-    {
-      title: "UI/UX Designer",
-      company: "DesignStudio",
-      location: "Hybrid",
-      type: "Contract",
-      salary: "$60k - $90k",
-      skills: ["Figma", "Adobe Suite", "Prototyping"],
-      match: "82%",
-      posted: "3 days ago"
-    },
-    {
-      title: "Full Stack Developer",
-      company: "StartupXYZ",
-      location: "Phnom Penh",
-      type: "Full-time",
-      salary: "$70k - $100k", 
-      skills: ["Node.js", "React", "MongoDB"],
-      match: "90%",
-      posted: "5 days ago"
-    }
-  ];
-
+  // The return (JSX) part remains mostly the same, but now it uses the dynamic jobMatches
   return (
     <>
       {/* Hero Section with Blue Primary Theme */}
@@ -113,7 +107,7 @@ export default function Services() {
           className="container mx-auto px-4 text-center max-w-4xl relative z-10"
         >
           {/* Enhanced Icon with Animation */}
-          <motion.div 
+          <motion.div
             className="flex justify-center mb-6"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -138,8 +132,8 @@ export default function Services() {
           <div className="max-w-md mx-auto">
             <motion.div
               className={`relative border-2 border-dashed rounded-2xl p-8 transition-all duration-300 ${
-                isDragOver 
-                  ? 'border-blue-600 bg-blue-50 scale-105' 
+                isDragOver
+                  ? 'border-blue-600 bg-blue-50 scale-105'
                   : 'border-gray-300 bg-white hover:border-blue-600 hover:bg-blue-50'
               } shadow-lg hover:shadow-xl`}
               onDragOver={handleDragOver}
@@ -154,7 +148,7 @@ export default function Services() {
                 >
                   <CloudArrowUpIcon className="w-12 h-12 text-blue-600 mx-auto" />
                 </motion.div>
-                
+
                 <label
                   htmlFor="cv-upload"
                   className="cursor-pointer block"
@@ -163,13 +157,13 @@ export default function Services() {
                     {isDragOver ? 'Drop your file here' : 'Drag & drop your CV'}
                   </span>
                   <span className="text-sm text-gray-500 block mb-4">or click to browse</span>
-                  
+
                   <div className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <DocumentArrowUpIcon className="w-5 h-5 mr-2" />
                     Choose File
                   </div>
                 </label>
-                
+
                 <input
                   id="cv-upload"
                   type="file"
@@ -177,11 +171,12 @@ export default function Services() {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-                
+
                 {fileName !== "No file chosen" && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ opacity: { duration: 0.2 }, y: { duration: 0.2 } }}
                     className="mt-4 flex items-center justify-center text-sm text-green-600 bg-green-50 px-4 py-2 rounded-lg"
                   >
                     <CheckCircleIcon className="w-4 h-4 mr-2" />
@@ -189,7 +184,7 @@ export default function Services() {
                   </motion.div>
                 )}
               </div>
-              
+
               <div className="mt-6 text-xs text-gray-400 text-center">
                 Supported formats: PDF, DOC, DOCX (Max 10MB)
               </div>
@@ -197,12 +192,12 @@ export default function Services() {
 
             <motion.button
               onClick={handleSubmit}
-              disabled={fileName === "No file chosen" || isUploading}
-              whileHover={{ scale: fileName !== "No file chosen" ? 1.05 : 1 }}
-              whileTap={{ scale: 0.95 }}
+              disabled={!selectedFile || isUploading} // Use selectedFile for disabled check
+              whileHover={{ scale: selectedFile && !isUploading ? 1.05 : 1 }} // Only scale if a file is selected and not uploading
+              whileTap={{ scale: selectedFile && !isUploading ? 0.95 : 1 }}
               className={`mt-8 w-full py-4 px-8 rounded-xl font-semibold text-lg transition-all duration-200 ${
-                fileName === "No file chosen" 
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                !selectedFile || isUploading // Check against selectedFile and isUploading
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
               }`}
             >
@@ -223,7 +218,7 @@ export default function Services() {
       </section>
 
       {/* Enhanced Jobs Section */}
-      {showJobs && (
+      {showJobs && jobMatches.length > 0 && ( // Ensure jobMatches is not empty before rendering
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4 max-w-6xl">
             <motion.div
@@ -232,7 +227,7 @@ export default function Services() {
               transition={{ duration: 0.8 }}
               className="text-center mb-12"
             >
-              <motion.div 
+              <motion.div
                 className="flex justify-center mb-6"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -242,7 +237,7 @@ export default function Services() {
                   <BriefcaseIcon className="w-8 h-8 text-white" />
                 </div>
               </motion.div>
-              
+
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
                 Perfect Matches Found!
               </h2>
@@ -254,7 +249,7 @@ export default function Services() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {jobMatches.map((job, index) => (
                 <motion.div
-                  key={index}
+                  key={index} // It's better to use a unique ID from the job if available, otherwise index is fallback
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
@@ -300,6 +295,15 @@ export default function Services() {
                           {skill}
                         </span>
                       ))}
+                    </div>
+                    {/* Placeholder for Save Job button - will be added later */}
+                    <div className="mt-4 text-right">
+                        <button
+                            // onClick={() => handleSaveJob(job.id)} // You'll implement this later
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
+                        >
+                            Save Job
+                        </button>
                     </div>
                   </div>
                 </motion.div>

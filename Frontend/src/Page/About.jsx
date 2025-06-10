@@ -52,7 +52,7 @@ const About = () => {
       gradient: "from-blue-600 to-indigo-600",
       bio: "AI specialist focused on developing intelligent matching algorithms.",
       social: {
-        facebook: "https://facebook.com/rathchhneoum",
+        facebook: "https://www.facebook.com/rath.chhnoeum/about",
         telegram: "https://t.me/rathchhneoum",
         github: "https://github.com/rathchhneoum"
       }
