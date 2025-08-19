@@ -35,7 +35,6 @@ const About = () => {
       name: "Min Phanith",
       role: "Frontend & Backend",
       photo: "/Assets/IMG_0215.JPG",
-      // skills: ["React", "Node.js", "UI/UX"], // Skills removed
       gradient: "from-blue-600 to-blue-500",
       bio: "Full-stack developer passionate about creating seamless user experiences.",
       social: {
@@ -48,7 +47,6 @@ const About = () => {
       name: "Rath Chhneoum",
       role: "Machine Learning Trainer",
       photo: "/Assets/chneoum.jpg",
-      // skills: ["Python", "TensorFlow", "AI"], // Skills removed
       gradient: "from-blue-600 to-indigo-600",
       bio: "AI specialist focused on developing intelligent matching algorithms.",
       social: {
@@ -61,7 +59,6 @@ const About = () => {
       name: "Ly Hour",
       role: "Backend & Machine Learning",
       photo: "/Assets/hour.jpg",
-      // skills: ["Python", "ML", "APIs"], // Skills removed
       gradient: "from-blue-600 to-blue-700",
       bio: "Backend architect specializing in scalable ML infrastructure.",
       social: {
@@ -74,7 +71,6 @@ const About = () => {
       name: "Ly Keasing",
       role: "Supporter",
       photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-      // skills: ["Support", "Testing", "QA"], // Skills removed
       gradient: "from-blue-600 to-blue-800",
       bio: "Quality assurance expert ensuring our platform delivers excellence.",
       social: {

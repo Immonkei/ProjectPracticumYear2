@@ -25,6 +25,12 @@ from auth.oauth_client import oauth # Corrected import - assuming this is correc
 # --- NEW IMPORT: Import your recommendation router ---
 from recommendation.routes import router as recommendation_router
 
+# per-site routers
+from scraper.routes_sites import (
+    jobify_router, camhr_router, workinga_router, bongthom_router, sites_index
+)
+
+
 app = FastAPI(
     title="Job Recommendation System API", # Added title for clarity
     description="API for CV parsing, ML-powered job matching, and user management.", # Added description
@@ -67,3 +73,15 @@ app.include_router(recommendation_router, prefix="/recommendations", tags=["Reco
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Job Recommendation System API!"} # Updated message for clarity5
+
+
+# Include the index and each site's routes under /api
+app.include_router(sites_index,     prefix="/api")
+app.include_router(jobify_router,   prefix="/api")
+app.include_router(camhr_router,    prefix="/api")
+app.include_router(workinga_router, prefix="/api")
+app.include_router(bongthom_router, prefix="/api")
+
+@app.get("/")
+def root():
+    return {"ok": True, "service": "backend (csv per-site)"}    

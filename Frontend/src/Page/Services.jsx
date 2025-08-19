@@ -88,6 +88,11 @@ export default function Services() {
     }
   };
 
+  // Function to handle viewing job details
+  const handleViewDetail = (link) => {
+    window.open(link, '_blank', 'noopener,noreferrer');
+  };
+
   // The return (JSX) part remains mostly the same, but now it uses the dynamic jobMatches
   return (
     <>
@@ -283,6 +288,13 @@ export default function Services() {
                         <CalendarIcon className="w-4 h-4 mr-2 text-blue-600" />
                         Posted {job.posted}
                       </div>
+                      {/* NEW: Term Display */}
+                      {job.term && ( // Only render if job.term exists
+                        <div className="flex items-center text-gray-600 text-sm">
+                          <BriefcaseIcon className="w-4 h-4 mr-2 text-purple-600" /> {/* Using BriefcaseIcon for term, or pick another if preferred */}
+                          Term: {job.term}
+                        </div>
+                      )}
                     </div>
 
                     {/* Skills Tags */}
@@ -296,16 +308,17 @@ export default function Services() {
                         </span>
                       ))}
                     </div>
-                    {/* Placeholder for Save Job button - will be added later */}
-                    <div className="mt-4 text-right">
-                        <button
-                            // onClick={() => handleSaveJob(job.id)} // You'll implement this later
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm"
-                        >
-                            Save Job
-                        </button>
-                    </div>
                   </div>
+                  {/* Job Link as a Button */}
+                  <div className="p-6 border-t border-gray-100 text-right">
+                    <button
+                      onClick={() => handleViewDetail(job.link)}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold"
+                    >
+                      View Detail
+                    </button>
+                  </div>
+
                 </motion.div>
               ))}
             </div>

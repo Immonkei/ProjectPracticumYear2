@@ -10,10 +10,9 @@ class RecommendedJob(BaseModel):
     title: str
     company: str
     location: str
-    type: str
+    term: str
     salary: str
     skills: List[str]
     match: str  # e.g., "95%"
-    posted: str # e.g., "2 days ago"
-    # Consider adding a unique ID for the job if you have one in your database
-    # id: int
+    posted: str
+    link: str 
